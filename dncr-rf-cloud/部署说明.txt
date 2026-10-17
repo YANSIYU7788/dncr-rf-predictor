@@ -1,0 +1,60 @@
+dNCR RF：GitHub + Streamlit Community Cloud部署
+
+本包是云端部署专用副本，已移除本机127.0.0.1和8502端口设置。
+固定使用RF随机森林模型，与本地RF-only v3使用相同参数。
+部署包已准备，不代表GitHub仓库或公网网页已经建立。
+
+一、上传到GitHub
+1. 在GitHub中新建仓库，例如dncr-rf-predictor。
+2. 解压本包，打开dncr-rf-cloud文件夹。
+3. 将这个文件夹里面的文件上传到仓库根目录，并保持models、.streamlit子目录结构。
+4. 仓库根目录应直接看到app_rf.py、rf_inference.py、rf_visuals.py、requirements.txt。
+5. models文件夹内必须包含RF.json；.streamlit文件夹内应有config.toml。
+6. GitHub负责保存代码；需要继续完成下面的云端运行步骤。GitHub Pages不能运行本程序的Python服务。
+
+二、部署网页
+1. 打开 https://share.streamlit.io/ ，登录并连接你的GitHub账号。
+2. 点击Create app，选择Yup, I have an app。
+3. Repository：选择刚上传的仓库。
+4. Branch：选择实际上传的分支，通常为main。
+5. Main file path：app_rf.py。
+6. Advanced settings中的Python version：选择3.12。
+7. 本包不需要填写Secrets；点击Deploy，等待依赖安装和应用启动。
+8. 部署成功后会获得以.streamlit.app结尾的HTTPS网址。
+
+如果把外层dncr-rf-cloud文件夹也一起上传了，入口路径要写dncr-rf-cloud/app_rf.py；
+推荐把内部文件放到仓库根目录，.streamlit/config.toml也放在仓库根目录下。
+采用网页上传时若遗漏.streamlit，可以在GitHub Add file > Create new file中创建.streamlit/config.toml并粘贴本包该文件内容。
+
+三、分享与核验
+1. 需要所有人访问时，在应用Settings > Sharing中将Who can view this app设为公开。
+2. 打开云端生成的HTTPS网址，页面应显示RF-based dNCR Prediction和RF-only v3。
+3. 演示输入Age=70、MOCA Score=25、Operation Time=120、GFR=80、Depression=No，
+   默认Primary analysis的RF概率应约为0.4199713340，阈值应约为0.2769316819。
+4. 这是软件一致性核验用的演示输入，不是患者记录。
+5. 确认Predict及结果下载可用后，将云端网址分享给他人；运行依赖云平台，不要求你的电脑持续开机。
+
+四、包内文件
+app_rf.py：RF网页入口。
+rf_inference.py：RF参数读取、预测和精确Shapley值计算。
+rf_visuals.py：解释图绘制和图像导出。
+requirements.txt：已核验的Python依赖版本。
+models/RF.json：已训练RF的树结构、概率、校准和阈值参数。
+.streamlit/config.toml：网页配色设置，未固定云端地址或端口。
+.gitignore：排除环境目录、缓存及本地密钥配置。
+validation：本包的应用加载和预测核验结果。
+SHA256SUMS.txt：文件校验值。
+
+五、运行与维护
+本部署包不包含患者级训练或验证Excel，在线预测无需这些数据。
+线上输入会发送到托管服务器处理；程序本身不将输入写入应用数据库。
+侧栏的高灵敏度阈值仍标注为事后探索；模型及验证性能没有因部署而改变。
+网页仅用于研究展示；请保留源程序、RF参数和依赖版本，并在更新后检查网页及示例预测。
+云平台服务可能变更，不能把网页地址本身当作永久归档。本地RF运行包可继续作为离线使用方式。
+若部署报错，请查看Manage app中的日志，核对入口路径、RF.json是否上传、Python是否为3.12。
+
+官方参考
+https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy
+https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/file-organization
+https://docs.streamlit.io/deploy/streamlit-community-cloud/share-your-app
+https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site

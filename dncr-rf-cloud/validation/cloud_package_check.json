@@ -1,0 +1,9 @@
+{
+  "model": "RF",
+  "example_probability": 0.41997133403107445,
+  "primary_threshold": 0.276931681898069,
+  "five_download_controls_rendered": true,
+  "server_address_or_port_hardcoded": false,
+  "AppTest": "passed",
+  "public_deployment": "not performed"
+}
